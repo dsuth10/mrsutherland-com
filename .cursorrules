@@ -1,0 +1,307 @@
+# Cursor Rules for Web App Integration into WordPress (mrsutherland.net)
+
+## Project Overview
+This repository contains web applications that are integrated into the WordPress site mrsutherland.net. Web apps are built as self-contained bundles and embedded into WordPress pages using custom HTML blocks. The site is hosted on Hostinger.
+
+## Agent Framework (.agent)
+Use the `.agent` folder as this project's skill program. When a task matches a skill's domain, **read and apply** the relevant skill from `.agent/skills/<name>/SKILL.md` (and its `references/` or `scripts/` as needed). When a task fits a specialist domain (frontend, backend, deploy, etc.), **follow** the corresponding agent from `.agent/agents/`. For procedures (deploy, plan, test, etc.), **follow** the steps in `.agent/workflows/` (e.g. `deploy.md`, `speckit.plan.md`).
+
+- **Index:** See [.agent/ARCHITECTURE.md](.agent/ARCHITECTURE.md) for the full list of agents, skills, and workflows.
+- **Project-specific mapping** (WordPress, mrsutherland.net, embedded web apps):
+  - **WordPress/CMS and deployment:** Use the **wordpress-cms** skill; for deployment procedure use the **deploy** workflow. For automated SFTP uploads to Hostinger, use the **deploy-hostinger** skill with the SSH MCP.
+  - **Frontend/UI and React apps:** Use the **frontend-specialist** agent and its skills (e.g. react-patterns, tailwind-patterns, wordpress-cms).
+  - **Multi-domain or coordination:** Use the **orchestrator** agent and its protocol (plan first, then specialists).
+- **Overlap:** `.cursorrules` remains the source for **project-specific** conventions (Hostinger, full-width layout, MCP usage, etc.); `.agent` provides **reusable** skills, agent personas, and workflows. Use both together (e.g. wordpress-cms skill + .cursorrules for mrsutherland.net specifics).
+
+## Technology Stack (Typical Web Apps)
+- **Frontend**: React (latest stable), TypeScript, or vanilla JavaScript
+- **Build Tool**: Vite (recommended) or other modern bundler
+- **Styling**: Tailwind CSS (via CDN), CSS Modules, or styled-components
+- **Deployment**: WordPress (embedded via custom HTML block)
+- **Integration**: WordPress MCP tools for content management
+- **Hosting**: Hostinger (hPanel, FTP/SFTP access)
+
+## Code Style & Conventions
+
+### TypeScript (when used)
+- Use TypeScript for all new code
+- Define explicit types/interfaces for all props, state, and function parameters
+- Prefer interfaces over types for object shapes
+- Always type React component props explicitly: `React.FC<Props>` or function component with typed parameters
+- Avoid `any` type - use `unknown` or proper types instead
+- Enable strict type checking - no implicit any
+
+### React Patterns (when using React)
+- Use functional components with hooks
+- Prefer `useState` and `useEffect` over class components
+- Use `useCallback` for event handlers passed to child components
+- Use `useMemo` for expensive computations
+- Extract reusable logic into custom hooks when appropriate
+- Keep components small and focused (single responsibility)
+- Use descriptive component and function names
+- Prefer named exports for components
+
+### File Organization
+- Each web app should be in its own directory
+- Components go in `components/` directory (if using component-based architecture)
+- Types/interfaces go in `types.ts` or `types/` directory
+- Constants go in `constants.ts` or `constants/` directory
+- Main app logic in `App.tsx` or `app.tsx` or `index.tsx`
+- Entry point should be clearly named (`index.tsx`, `main.tsx`, etc.)
+
+### Styling
+- Use Tailwind CSS utility classes (loaded via CDN) when possible
+- Inline styles only when necessary (use React style objects for React apps)
+- Keep responsive design in mind
+- Full-width layout: Use `100vw` and negative margins to break out of WordPress containers
+- Apps should be designed to span full desktop width when specified by design requirements
+- Use CSS `!important` strategically when breaking out of WordPress container constraints
+
+## WordPress Integration
+
+### Build Configuration
+- **Critical**: Build as IIFE (Immediately Invoked Function Expression) format for WordPress embedding
+- Bundle must be self-contained (includes all dependencies like React, ReactDOM, etc.)
+- Output to `dist/assets/` directory or similar build output directory
+- Build output should be named consistently: `[app-name]-app.js` (after copying from hash-named file if using Vite)
+- The bundle must mount to a root element (typically `#root` but can be customized)
+- Use environment-specific build configurations when needed
+
+### WordPress Deployment
+- JavaScript file must be uploaded to `/wp-content/uploads/[app-name]-app.js`
+- WordPress page uses custom HTML block with:
+  - Required CSS/CDN links (e.g., Tailwind CSS CDN script tag)
+  - **Full-width wrapper**: Wrapper div with CSS that breaks out of WordPress containers using `100vw` width and negative margins
+  - Root div with appropriate ID (typically `id="root"`)
+  - Script tag referencing the uploaded JS file: `<script src="https://mrsutherland.net/wp-content/uploads/[app-name]-app.js"></script>`
+- **Critical**: CSS wrapper MUST use `!important` rules to break out of WordPress container constraints
+- **Required**: Use viewport width (`100vw`) with calculated margins (`calc(-50vw + 50%)`) to achieve full-width layout - this is standard for all apps
+- Include wrapper styles directly in the HTML block or WordPress page content
+- The wrapper div should have a unique ID like `#app-wrapper` or `#[app-name]-wrapper`
+
+### WordPress MCP Integration
+- Use WordPress MCP tools for all content management operations
+- Create WordPress pages for each web app using `mcp_wordpress-mcp_wp_add_page` or `mcp_wordpress-mcp_wp_update_page`
+- Store page IDs and other WordPress references for future updates
+- When updating WordPress content, always use the MCP update functions, never manual editing unless necessary
+- Use WordPress MCP to manage categories, tags, and other taxonomies
+
+### WordPress Page Structure
+- Create descriptive page titles and slugs
+- Use custom HTML blocks for app embedding
+- Include explanatory content about the app above or below the embedded app
+- Ensure proper WordPress block structure for compatibility
+
+## Build & Deployment Process
+
+### Development
+1. Navigate to the app directory
+2. Run `npm run dev` (or equivalent) for local development
+3. Test the app thoroughly in local environment
+4. Use `npm run build` (or equivalent) to create production bundle
+5. Verify build output before deployment
+
+### Production Build Steps
+1. Build the app: `npm run build` (or equivalent build command)
+2. Locate the generated JavaScript bundle in `dist/assets/` or similar output directory
+3. Copy/rename the hash-named JS file to `[app-name]-app.js` for consistent naming
+4. Upload the JavaScript file to WordPress `/wp-content/uploads/` via:
+   - **SSH MCP / SCP** (Preferred for automation - see `deploy-hostinger` skill)
+   - **hPanel File Manager** (Hostinger - preferred for quick manual uploads)
+   - **FTP/SFTP** (Hostinger port 65002) - manual via FileZilla
+   - **WordPress Media Library** (requires `.js` upload permission via plugin)
+5. Create or update WordPress page using WordPress MCP tools
+6. Add custom HTML block with app embedding code to the WordPress page
+7. Clear all caches:
+   - LiteSpeed Cache (WordPress Admin)
+   - Browser cache (hard refresh)
+8. Test the live app on the WordPress site
+
+### Hostinger-Specific Steps
+- Access via hPanel: https://hpanel.hostinger.com
+- File Manager: Files → File Manager → navigate to `/wp-content/uploads/`
+- SFTP details:
+  - Port: 65002 (Hostinger-specific)
+  - Use hPanel FTP accounts section for credentials
+  - Use FileZilla or similar SFTP client
+- File permissions: Ensure JavaScript files are readable (644 or 755)
+
+### Environment Variables
+- Store API keys and sensitive data in `.env.local` file (not committed to git)
+- Use `.gitignore` to exclude `.env.local` and similar files
+- Load environment variables in build process (Vite uses `loadEnv`)
+- Document required environment variables in README or documentation
+
+## Naming Conventions
+- App directories: Use kebab-case (e.g., `my-web-app`)
+- JavaScript bundles: `[app-name]-app.js`
+- WordPress page slugs: Use kebab-case matching app purpose
+- Component files: PascalCase for React components, kebab-case for utilities
+- Constants: UPPER_SNAKE_CASE for constants
+
+## Component Guidelines (React Apps)
+
+### Component Structure Template
+```typescript
+import React from 'react';
+
+interface ComponentProps {
+  // Define props explicitly
+  prop1: string;
+  prop2?: number;
+}
+
+export const ComponentName: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  // Component logic
+  return (
+    // JSX
+  );
+};
+
+export default ComponentName;
+```
+
+### State Management
+- Use local component state with `useState` for component-specific state
+- Lift state up when multiple components need it
+- Use `useCallback` for functions passed as props to prevent unnecessary re-renders
+- Consider context API for shared state across components
+- Avoid global state management libraries unless necessary
+
+### Event Handling
+- Use React synthetic events (`React.MouseEvent`, `React.DragEvent`, etc.)
+- Prevent default behavior explicitly when needed: `e.preventDefault()`
+- Type event handlers properly with specific event types
+- Use descriptive handler names: `handleClick`, `handleSubmit`, etc.
+
+## Accessibility
+- Include `aria-label` attributes for icons and visual elements
+- Use semantic HTML elements (`<main>`, `<header>`, `<nav>`, etc.)
+- Ensure keyboard navigation works throughout the app
+- Use proper heading hierarchy (`h1`, `h2`, `h3`, etc.)
+- Include alt text for images (even decorative ones)
+- Test with screen readers when possible
+- Maintain proper color contrast ratios
+
+## Error Handling
+- Handle edge cases (empty arrays, null values, undefined, etc.)
+- Use TypeScript to catch type errors at compile time
+- Log errors to console in development, handle gracefully in production
+- Provide user feedback for errors (notifications, messages, error boundaries)
+- Implement error boundaries for React apps
+- Validate user inputs and API responses
+
+## Performance
+- Bundle size should be optimized (target < 500KB gzipped for most apps)
+- Use React.memo for components that don't need frequent re-renders
+- Lazy load heavy components if needed
+- Minimize re-renders with proper dependency arrays in hooks
+- Optimize images and assets
+- Use code splitting when appropriate
+- Minimize JavaScript bundle size
+
+## Testing Considerations
+- Code should be testable (pure functions where possible)
+- Components should have clear inputs/outputs
+- Avoid side effects in render functions
+- Keep business logic separate from UI logic
+- Test edge cases and error conditions
+- Test responsive behavior on different screen sizes
+
+## Git & Version Control
+- Commit meaningful messages following conventional commits when possible
+- Don't commit:
+  - `node_modules/`
+  - `.env.local` or any files with API keys or secrets
+  - Build artifacts in `dist/` (unless necessary for deployment tracking)
+  - Temporary upload/test files
+  - OS-specific files (`.DS_Store`, `Thumbs.db`, etc.)
+- Use `.gitignore` appropriately for each app directory
+
+## WordPress Plugin Development
+- PHP plugins go in root directory (not in individual app directories)
+- Plugin files should follow WordPress naming conventions
+- Use WordPress hooks (`wp_head`, `wp_footer`, `wp_enqueue_scripts`, etc.) with appropriate priority
+- Always check `!defined('ABSPATH')` to prevent direct access
+- Follow WordPress coding standards for PHP
+- Inject JavaScript via WordPress hooks, not inline in templates
+- Use WordPress nonces for security when handling form submissions
+- Document plugin purpose and functionality
+
+## Full-Width Layout Requirements
+- **Standard Requirement**: All apps MUST use full-width layout to break out of WordPress container constraints
+- **Required CSS**: Use CSS with `!important` flags to override WordPress theme styles. Include this in the WordPress page HTML block:
+  ```css
+  <style>
+  #app-wrapper {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+    position: relative !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  #root {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  #root > div {
+    width: 100vw !important;
+    max-width: none !important;
+    margin-left: calc(-50vw + 50%) !important;
+    margin-right: calc(-50vw + 50%) !important;
+  }
+  </style>
+  ```
+- **Wrapper Structure**: Include wrapper div with appropriate ID and styles in the WordPress HTML block:
+  ```html
+  <div id="app-wrapper">
+    <div id="root"></div>
+  </div>
+  ```
+- **In-App Styling**: If using React inline styles, also apply full-width styles to the main app container:
+  ```typescript
+  style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
+  ```
+- **Testing**: Always verify full-width layout works on different screen sizes (desktop, tablet, mobile)
+- **Verification**: Check that the app spans the full viewport width and is not constrained by WordPress theme containers
+
+## Important Notes
+- **Self-contained bundles**: All dependencies must be bundled (React, ReactDOM, libraries, etc.)
+- **WordPress compatibility**: Apps must work within WordPress's constraints while potentially breaking out visually
+- **Cross-browser**: Ensure compatibility with modern browsers (Chrome, Firefox, Safari, Edge)
+- **Responsive design**: Apps should be responsive or at least usable on tablet/mobile devices
+- **Cache clearing**: Always clear caches after deployment (LiteSpeed Cache + browser)
+- **Testing**: Test locally first, then on staging if available, then production
+
+## Deployment Checklist
+1. ✅ Build the app successfully
+2. ✅ Rename/copy bundle to consistent naming convention
+3. ✅ Upload JavaScript file to `/wp-content/uploads/` via hPanel or SFTP
+4. ✅ Create or update WordPress page using WordPress MCP
+5. ✅ Add custom HTML block with proper embedding code
+6. ✅ Verify CSS/CDN dependencies are loaded
+7. ✅ Test app functionality on live site
+8. ✅ Verify full-width layout (if required)
+9. ✅ Clear all caches (WordPress + browser)
+10. ✅ Test on multiple browsers and devices
+
+## When Adding a New Web App
+1. Create new directory with app name (kebab-case)
+2. Set up build configuration (Vite config, package.json, etc.)
+3. Build as self-contained IIFE bundle
+4. Follow naming conventions for files and WordPress resources
+5. Create WordPress page using MCP tools
+6. Upload JavaScript bundle to WordPress uploads directory
+7. Test thoroughly before marking as complete
+8. Document any app-specific requirements or configurations
+
+## Hostinger-Specific Information
+- **Control Panel**: hPanel (https://hpanel.hostinger.com)
+- **FTP/SFTP Port**: 65002 (different from standard ports)
+- **File Manager**: Accessible via hPanel → Files → File Manager
+- **WordPress Admin**: Standard WordPress admin at `/wp-admin`
+- **Cache Plugin**: LiteSpeed Cache (clear cache after deployments)
+- **Domain**: mrsutherland.net
+- **Upload Path**: `/wp-content/uploads/` for JavaScript files
