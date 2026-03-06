@@ -1,0 +1,342 @@
+/*
+Theme Name: Mr Sutherland Editorial
+Theme URI: https://mrsutherland.net
+Author: Mr Sutherland
+Description: Modern editorial theme for mrsutherland.net — clean typography, clear hierarchy, no top border. Matches the interactive blog post design (navy/slate + amber).
+Version: 1.1.0
+License: GNU General Public License v2 or later
+Text Domain: mrsutherland-editorial
+*/
+
+/* Design tokens — editorial modern */
+:root {
+  --color-bg: #0f172a;
+  --color-bg-elevated: #1e293b;
+  --color-surface: #334155;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-accent: #f59e0b;
+  --color-border: #475569;
+  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "Source Sans 3", system-ui, sans-serif;
+  --space-section: 5rem;
+  --space-block: 1.5rem;
+  --content-max: 48rem;
+  --content-wide: 56rem;
+}
+
+/* Reset top border / blue line globally */
+body,
+html,
+#page,
+.site,
+.site-header,
+#masthead,
+header[role="banner"],
+.wp-site-blocks > *:first-child {
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3rem); }
+h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
+h3 { font-size: 1.25rem; }
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Site header */
+.site-header {
+  background: var(--color-bg-elevated);
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-branding a {
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+}
+.site-branding a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.main-navigation ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.main-navigation a {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+.main-navigation a:hover {
+  color: var(--color-text);
+}
+
+/* Layout */
+.site-main {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-section) 1.5rem;
+}
+
+.entry-header {
+  margin-bottom: var(--space-block);
+}
+.entry-title {
+  margin-bottom: 0.5rem;
+}
+.entry-title a {
+  color: var(--color-text);
+}
+.entry-meta {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* Post list (archive / blog) */
+.posts-list,
+.blog .site-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.post-card {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s ease;
+}
+.post-card:hover {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.post-card .entry-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.post-card .entry-meta {
+  margin-bottom: 0.75rem;
+}
+
+/* Front page — editorial style (matches GPT-5.4 page) */
+.editorial-hero {
+  padding: 5rem 1.5rem 4rem;
+  background: linear-gradient(165deg, var(--color-bg) 0%, var(--color-bg-elevated) 45%, #0c4a6e 100%);
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.editorial-hero-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+.editorial-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+.editorial-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+}
+.editorial-lead {
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  max-width: 36rem;
+  line-height: 1.6;
+}
+.editorial-posts {
+  padding: var(--space-section) 1.5rem;
+}
+.editorial-posts-inner {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+}
+.editorial-section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 400;
+  margin-bottom: 2.5rem;
+  color: var(--color-text);
+}
+.editorial-posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+.editorial-posts-list .post-card {
+  padding: 2rem;
+  border-radius: 0.75rem;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+}
+.editorial-posts-list .post-card .entry-title {
+  font-size: 1.375rem;
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+.editorial-posts-list .post-card .entry-title a {
+  color: var(--color-text);
+}
+.editorial-posts-list .post-card .entry-title a:hover {
+  color: var(--color-accent);
+}
+.editorial-posts-list .entry-summary {
+  color: var(--color-text-muted);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+.editorial-posts-list .entry-summary p {
+  margin: 0 0 0.5rem;
+}
+
+/* Archive (blog index) — same editorial list style */
+.archive-header {
+  margin-bottom: 2.5rem;
+}
+.archive-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 400;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+}
+.archive-description {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+.blog .posts-list.editorial-posts-list .post-card,
+.archive .posts-list.editorial-posts-list .post-card {
+  padding: 2rem;
+  border-radius: 0.75rem;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+}
+.blog .posts-list .entry-title a,
+.archive .posts-list .entry-title a {
+  color: var(--color-text);
+}
+.blog .posts-list .entry-title a:hover,
+.archive .posts-list .entry-title a:hover {
+  color: var(--color-accent);
+}
+
+/* Single post / page content */
+.single-article .entry-header {
+  margin-bottom: 2.5rem;
+}
+.single-article .entry-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.5rem;
+}
+.entry-content {
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+.entry-content > .scroll-reveal {
+  margin-bottom: 1.25rem;
+}
+.entry-content > .scroll-reveal:last-child {
+  margin-bottom: 0;
+}
+.entry-content p {
+  margin-bottom: 1.25rem;
+}
+.entry-content ul, .entry-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+/* Site footer */
+.site-footer {
+  background: var(--color-bg-elevated);
+  border-top: 1px solid var(--color-border);
+  padding: 2rem 1.5rem;
+  margin-top: var(--space-section);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.site-footer a {
+  color: var(--color-text-muted);
+}
+.site-footer a:hover {
+  color: var(--color-accent);
+}
+
+/* Scroll reveal — slide up on scroll (matches GPT-5.4 interactive page) */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(3rem);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Utilities */
+.screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
