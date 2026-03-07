@@ -1,9 +1,9 @@
 import { Effect, CategoryType } from './types';
 
 export const CATEGORIES: { name: CategoryType; bgColor: string; borderColor: string; highlightColor: string; }[] = [
-    { name: 'Social', bgColor: 'bg-blue-100', borderColor: 'border-blue-500', highlightColor: 'bg-blue-200' },
-    { name: 'Environmental', bgColor: 'bg-green-100', borderColor: 'border-green-500', highlightColor: 'bg-green-200' },
-    { name: 'Economic', bgColor: 'bg-yellow-100', borderColor: 'border-yellow-500', highlightColor: 'bg-yellow-200' },
+  { name: 'Social', bgColor: 'bg-blue-100', borderColor: 'border-blue-500', highlightColor: 'bg-blue-200' },
+  { name: 'Environmental', bgColor: 'bg-green-100', borderColor: 'border-green-500', highlightColor: 'bg-green-200' },
+  { name: 'Economic', bgColor: 'bg-yellow-100', borderColor: 'border-yellow-500', highlightColor: 'bg-yellow-200' },
 ];
 
 export const EFFECTS: Effect[] = [
@@ -16,7 +16,9 @@ export const EFFECTS: Effect[] = [
   { id: '7', text: 'Loss of habitats', category: 'Environmental', icon: '🌳', explanation: 'When floods destroy forests and fields, animals lose their homes and food sources.' },
   { id: '8', text: 'Dispersal of weed species', category: 'Environmental', icon: '🌿', explanation: 'Floodwaters can carry seeds from unwanted plants (weeds) to new places, harming local nature.' },
   { id: '9', text: 'Disruption to water supply, electricity, transport, communication, education', category: 'Economic', icon: '💡', explanation: 'Floods can damage power lines, water pipes, roads, and phone lines, which costs a lot of money to fix.' },
-  { id: '10', text: 'Damage to property and loss of land value', category: 'Economic', icon: '🏚️', explanation: 'Floods can ruin buildings and land, making them worth less money.' },
+  { id: '10', text: 'Property damage', category: 'Economic', icon: '🏚️', explanation: 'Floods can ruin buildings and land, making them worth less money.' },
   { id: '11', text: 'Damage to crops, fencing and loss of livestock', category: 'Economic', icon: '🚜', explanation: 'Farms can be badly damaged, losing crops and animals. This costs farmers a lot of money.' },
   { id: '12', text: 'Downturn in tourism', category: 'Economic', icon: '✈️', explanation: 'When an area is flooded, tourists stop visiting, which means local businesses lose money.' },
+  { id: '13', text: 'Water pollution', category: 'Environmental', icon: '🤢', explanation: 'Floodwaters can pick up chemicals and waste, making water unsafe for people and animals.' },
+  { id: '14', text: 'Business disruption', category: 'Economic', icon: '🏢', explanation: 'Floods can force businesses to close, leading to loss of income and jobs in the community.' },
 ];

@@ -44,30 +44,30 @@ const Notification: React.FC<{ message: string; onClose: () => void }> = ({ mess
 
   return (
     <div className="fixed top-5 left-1/2 -translate-x-1/2 w-11/12 max-w-lg bg-white p-4 rounded-lg shadow-2xl border-l-8 border-green-500 z-50 transition-transform duration-300 transform animate-bounce">
-        <div className="flex items-start">
-            <div className="flex-shrink-0">
-                <span className="text-2xl">💡</span>
-            </div>
-            <div className="ml-3 flex-1">
-                <p className="text-lg font-bold text-green-800">Why is it correct?</p>
-                <p className="text-md text-gray-700 mt-1">{message}</p>
-            </div>
-            <div className="ml-4 flex-shrink-0 flex">
-                <button onClick={onClose} className="inline-flex text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Close</span>
-                    &times;
-                </button>
-            </div>
+      <div className="flex items-start">
+        <div className="flex-shrink-0">
+          <span className="text-2xl">💡</span>
         </div>
+        <div className="ml-3 flex-1">
+          <p className="text-lg font-bold text-green-800">Why is it correct?</p>
+          <p className="text-md text-gray-700 mt-1">{message}</p>
+        </div>
+        <div className="ml-4 flex-shrink-0 flex">
+          <button onClick={onClose} className="inline-flex text-gray-400 hover:text-gray-500">
+            <span className="sr-only">Close</span>
+            &times;
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
 
 // SuccessModal Component
-const SuccessModal: React.FC<{ 
-  onPlayAgain: () => void; 
-  score: number; 
+const SuccessModal: React.FC<{
+  onPlayAgain: () => void;
+  score: number;
   categoryScores: CategoryScores;
 }> = ({ onPlayAgain, score, categoryScores }) => {
 
@@ -172,9 +172,9 @@ export default function App() {
     if (effect.category === targetCategory) {
       // Correct drop
       setScore(prev => prev + 10);
-      setCategoryScores(prev => ({ 
-        ...prev, 
-        [targetCategory]: { ...prev[targetCategory], correct: prev[targetCategory].correct + 1 } 
+      setCategoryScores(prev => ({
+        ...prev,
+        [targetCategory]: { ...prev[targetCategory], correct: prev[targetCategory].correct + 1 }
       }));
       setUnassignedEffects((prev) => prev.filter((e) => e.id !== draggedItemId));
       setCategorizedEffects((prev) => ({
@@ -185,34 +185,34 @@ export default function App() {
     } else {
       // Incorrect drop
       setScore(prev => prev - 5);
-      setCategoryScores(prev => ({ 
-        ...prev, 
-        [targetCategory]: { ...prev[targetCategory], incorrect: prev[targetCategory].incorrect + 1 } 
+      setCategoryScores(prev => ({
+        ...prev,
+        [targetCategory]: { ...prev[targetCategory], incorrect: prev[targetCategory].incorrect + 1 }
       }));
       setIncorrectDrop(targetCategory);
       setTimeout(() => setIncorrectDrop(null), 500);
     }
     setDraggedItemId(null);
   };
-  
-  const handleUnassignedDrop = () => {
-      if (!draggedItemId) return;
-      
-      const effect = categorizedEffects.Social.find(e => e.id === draggedItemId) || 
-                     categorizedEffects.Environmental.find(e => e.id === draggedItemId) || 
-                     categorizedEffects.Economic.find(e => e.id === draggedItemId);
 
-      if (effect) {
-          setCategorizedEffects(prev => {
-              const newCategorized = {...prev};
-              (Object.keys(newCategorized) as CategoryType[]).forEach(cat => {
-                  newCategorized[cat] = newCategorized[cat].filter(e => e.id !== draggedItemId);
-              });
-              return newCategorized;
-          });
-          setUnassignedEffects(prev => [...prev, effect]);
-      }
-      setDraggedItemId(null);
+  const handleUnassignedDrop = () => {
+    if (!draggedItemId) return;
+
+    const effect = categorizedEffects.Social.find(e => e.id === draggedItemId) ||
+      categorizedEffects.Environmental.find(e => e.id === draggedItemId) ||
+      categorizedEffects.Economic.find(e => e.id === draggedItemId);
+
+    if (effect) {
+      setCategorizedEffects(prev => {
+        const newCategorized = { ...prev };
+        (Object.keys(newCategorized) as CategoryType[]).forEach(cat => {
+          newCategorized[cat] = newCategorized[cat].filter(e => e.id !== draggedItemId);
+        });
+        return newCategorized;
+      });
+      setUnassignedEffects(prev => [...prev, effect]);
+    }
+    setDraggedItemId(null);
   }
 
   const [isOverUnassigned, setIsOverUnassigned] = useState(false);
@@ -225,7 +225,7 @@ export default function App() {
         <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-800">Effects of Flooding</h1>
         <p className="text-lg text-slate-600 mt-2">Drag each effect into the correct category.</p>
       </header>
-      
+
       <div className="text-center mb-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg max-w-md mx-auto">
         <h3 className="text-xl font-bold text-blue-800 mb-2">Scoring Rules</h3>
         <div className="flex justify-center items-center gap-6">
@@ -242,18 +242,18 @@ export default function App() {
 
       <div className="flex justify-center items-center gap-8 mb-6">
         <div className="text-2xl font-bold bg-white px-6 py-2 rounded-full shadow-md text-indigo-600">
-            Score: {score}
+          Score: {score}
         </div>
         <button
-            onClick={initializeGame}
-            className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-transform duration-200 hover:scale-105"
+          onClick={initializeGame}
+          className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-6 rounded-full shadow-lg transition-transform duration-200 hover:scale-105"
         >
-            Reset Game
+          Reset Game
         </button>
       </div>
 
       <main className="grid grid-cols-1 lg:grid-cols-4 gap-6 max-w-[95vw] mx-auto" style={{ maxWidth: 'none', width: '95%' }}>
-        <div 
+        <div
           className={`lg:col-span-1 p-6 rounded-xl border-4 border-dashed transition-colors duration-300 ${isOverUnassigned ? 'bg-gray-200' : 'bg-gray-100'} border-gray-400`}
           onDragOver={(e) => { e.preventDefault(); setIsOverUnassigned(true); }}
           onDragLeave={() => setIsOverUnassigned(false)}
